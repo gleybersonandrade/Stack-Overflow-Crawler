@@ -99,11 +99,11 @@ function process_questions(err, results) {
 				process_answers(answers_control, err, results);
 			}, [answers_control.question_id]);
 		});
+		save_data();
 		if (results.has_more) {
 			++questions_filter.page;
 			context.search.advanced(questions_filter, process_questions)
 		} else {
-			save_data();
 			console.log('--------------------------------------');
 			console.log('API: ' + api_name + ' - TOTAL: ' + num_questions);
 			console.log('--------------------------------------');
