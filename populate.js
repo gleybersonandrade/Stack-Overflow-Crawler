@@ -1,6 +1,4 @@
-var async = require('async');
 var fs = require('fs');
-
 var DB = require('./db').DB;
 
 async function populate_users(db){
@@ -8,11 +6,14 @@ async function populate_users(db){
         fs.readFile('files/users.json', (err, data) => {
             if (err) throw err;
             let users = JSON.parse(data);
+            let count = 0;
             users.forEach(async function (user, user_index) {
-                const user_resolve = await db.insert_user(user);
-                console.log("User " + user_index + " inserted! " + user_resolve);
+                if (!await db.insert_user(user)) {
+                    console.log("User " + user_index + " inserted!");
+                    count++;
+                }
             });
-            resolve(users.length);
+            resolve(count);
         });        
     });
 };
@@ -22,15 +23,19 @@ async function populate_questions(db){
         fs.readFile('files/questions.json', (err, data) => {
             if (err) throw err;
             let questions = JSON.parse(data);
+            let count = 0;
             questions.forEach(async function (question, question_index) {
-                const question_resolve = await db.insert_question(question);
-                console.log("Question " + question_index + " inserted! " + question_resolve);
+                if (!await db.insert_question(question)) {
+                    console.log("Question " + question_index + " inserted!");
+                    count++;
+                }
                 question.tags.forEach(async function(tag, tag_index) {
-                    const tag_resolve = await db.insert_tag(tag, question.question_id);
-                    console.log("Tag " + tag_index + " inserted! " + tag_resolve);
+                    if (!await db.insert_tag(tag, question.question_id)) {
+                        console.log("Tag " + tag_index + " inserted!");
+                    }
                 });
             });
-            resolve(questions.length);
+            resolve(count);
         });        
     });
 };
@@ -40,15 +45,19 @@ async function populate_answers(db){
         fs.readFile('files/answers.json', (err, data) => {
             if (err) throw err;
             let answers = JSON.parse(data);
+            let count = 0;
             answers.forEach(async function (answer, answer_index) {
-                const answer_resolve = await db.insert_answer(answer);
-                console.log("Answer " + answer_index + " inserted! " + answer_resolve);
+                if (!await db.insert_answer(answer)) {
+                    console.log("Answer " + answer_index + " inserted!");
+                    count++;
+                }
                 answer.codes.forEach(async function(code, code_index) {
-                    const code_resolve = await db.insert_code(code, answer.answer_id);
-                    console.log("Code " + code_index + " inserted! " + code_resolve);
+                    if (!await db.insert_code(code, answer.answer_id)) {
+                        console.log("Code " + code_index + " inserted!");
+                    }
                 });
             });
-            resolve(answers.length);
+            resolve(count);
         });        
     });
 };
@@ -62,7 +71,7 @@ async function populate() {
     console.log(count_questions + " questions inserted!");
     const count_answers = await populate_answers(db);
     console.log(count_answers + " answers inserted!");
-    // db.connection.end();
+    db.connection.end();
 }
 
 populate();

@@ -89,9 +89,9 @@ class DB {
 	insert_lint(lint, code_id) {
 		return new Promise(resolve => {
 			this.connection.query('INSERT INTO lints SET ?', {
-				rule: lint.rule,
+				rule: lint.ruleId,
 				codes_code_id: code_id,
-				type: lint.type
+				message: lint.message
 			}, function(err) {
 				resolve(err);
 			});
@@ -99,9 +99,10 @@ class DB {
 	}
 
 	select_codes() {
-		this.connection.query('SELECT * FROM codes', function(err, result, fields){
-			if (err) throw err;
-			console.log(result);
+		return new Promise(resolve => {
+			this.connection.query('SELECT * FROM codes', function(err, result){
+				resolve(result);
+			});
 		});
 	}
 }
