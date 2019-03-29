@@ -1,20 +1,21 @@
+var args = require('yargs').argv;
 var DomParser = require('dom-parser');
 var fs = require('fs');
-var stackexchange = require('stackexchange-node');
+var Stackexchange = require('stackexchange-node');
 
-var api_name = 'javascript';
-var link_site = false;
 var tags = ['javascript'];
-var options_stackoverflow = { version: 2.2 };
+var options_stackoverflow = {
+	version: 2.2 
+};
 var questions_filter = {
 	key: 'F62k*pfvO0OEnM6rpB37Fg((',
 	page: 1,
 	pagesize: 100,
 	sort: 'activity',
-	order: 'desc',
+	order: 'asc',
+	fromdate: 0,
 	filter: 'withbody'
 };
-var parser = new DomParser();
 var data = {
 	users: [],
 	questions: [],
@@ -65,15 +66,15 @@ function push_answer(answer, codes, user_id) {
 }
 
 function save_data() {
-	fs.writeFile('files/users.json', JSON.stringify(data.users), (err) => {
+	fs.writeFile('files/users_' + questions_filter.fromdate + '.json', JSON.stringify(data.users), (err) => {
 		if (err) throw err
 		console.log('The users file has been saved!')
 	})
-	fs.writeFile('files/questions.json', JSON.stringify(data.questions), (err) => {
+	fs.writeFile('files/questions_' + questions_filter.fromdate + '.json', JSON.stringify(data.questions), (err) => {
 		if (err) throw err
 		console.log('The questions file has been saved!')
 	})
-	fs.writeFile('files/answers.json', JSON.stringify(data.answers), (err) => {
+	fs.writeFile('files/answers_' + questions_filter.fromdate + '.json', JSON.stringify(data.answers), (err) => {
 		if (err) throw err
 		console.log('The answers file has been saved!')
 	})
@@ -92,9 +93,9 @@ function process_questions(err, results) {
 				},
 				question_id: question.question_id
 			};
-			console.log('[' + (++num_questions) + '] TÍTULO: ' + question.title);
 			push_user(question.owner);
 			push_question(question, question.owner.user_id);
+			console.log('[' + data.questions.length + '] TÍTULO: ' + question.title);
 			context.questions.answers(answers_control.filter, function(err, results){
 				process_answers(answers_control, err, results);
 			}, [answers_control.question_id]);
@@ -104,9 +105,9 @@ function process_questions(err, results) {
 			++questions_filter.page;
 			context.search.advanced(questions_filter, process_questions)
 		} else {
-			console.log('--------------------------------------');
-			console.log('API: ' + api_name + ' - TOTAL: ' + num_questions);
-			console.log('--------------------------------------');
+			console.log('-------------------------------');
+			console.log('TOTAL: ' + data.questions.length);
+			console.log('-------------------------------');
 		}
 	}
 }
@@ -132,14 +133,15 @@ function process_answers(answers_control, err, results) {
 	}
 }
 
+console.log("Coletando perguntas");
+console.log("-------------------");
+
+if (args.time) {
+	questions_filter.fromdate = args.time;
+} else if (args.day && args.month && args.year) {
+	questions_filter.fromdate = new Date(args.year + "/" + args.month + "/" + args.day).getTime() / 1000;
+}
 if (tags.length) questions_filter.tagged = tags.join(';');
-
-console.log("Coletando perguntas = API: " + api_name);
-console.log("--------------------------------------");
-
-var num_questions = 0;
-
-if (link_site) options_stackoverflow.site = api_name;
-var context = new stackexchange(options_stackoverflow);
-
+var parser = new DomParser();
+var context = new Stackexchange(options_stackoverflow);
 context.search.advanced(questions_filter, process_questions);
