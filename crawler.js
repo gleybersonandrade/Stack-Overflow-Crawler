@@ -3,7 +3,7 @@ var DomParser = require('dom-parser');
 var fs = require('fs');
 var Stackexchange = require('stackexchange-node');
 
-var tags = ['javascript'];
+var tags = ['javascript', 'php', 'python', 'ruby'];
 var options_stackoverflow = {
 	version: 2.2 
 };
@@ -17,26 +17,24 @@ var questions_filter = {
 	filter: 'withbody'
 };
 var data = {
-	users: [],
-	questions: [],
-	answers: []
+	users: {},
+	questions: {},
+	answers: {}
 };
 
 function push_user(user) {
-	data.users.push({
-		user_id: user.user_id,
+	data.users[user.user_id] = {
 		display_name: user.display_name,
 		user_type: user.user_type,
 		reputation: user.reputation,
 		accept_rate: user.accept_rate,
 		link: user.link,
 		profile_image: user.profile_image
-	});
+	};
 }
 
 function push_question(question, user_id) {
-	data.questions.push({
-		question_id: question.question_id,
+	data.questions[question.question_id] = {
 		title: question.title,
 		body: question.body,
 		view_count: question.view_count,
@@ -48,12 +46,11 @@ function push_question(question, user_id) {
 		last_edit_date: question.last_edit_date,
 		tags: question.tags,
 		user_id: user_id
-	});
+	};
 }
 
 function push_answer(answer, codes, user_id) {
-	data.answers.push({
-		answer_id: answer.answer_id,
+	data.answers[answer.answer_id] = {
 		score: answer.score,
 		is_accepted: answer.is_accepted,
 		creation_date: answer.creation_date,
@@ -62,19 +59,19 @@ function push_answer(answer, codes, user_id) {
 		codes: codes,
 		questions_question_id: answer.question_id,
 		user_id: user_id
-	});
+	};
 }
 
 function save_data() {
-	fs.writeFile('files/users_' + questions_filter.fromdate + '.json', JSON.stringify(data.users), (err) => {
+	fs.writeFile('files/users.json', JSON.stringify(data.users, null, 4), (err) => {
 		if (err) throw err
 		console.log('The users file has been saved!')
 	})
-	fs.writeFile('files/questions_' + questions_filter.fromdate + '.json', JSON.stringify(data.questions), (err) => {
+	fs.writeFile('files/questions.json', JSON.stringify(data.questions, null, 4), (err) => {
 		if (err) throw err
 		console.log('The questions file has been saved!')
 	})
-	fs.writeFile('files/answers_' + questions_filter.fromdate + '.json', JSON.stringify(data.answers), (err) => {
+	fs.writeFile('files/answers.json', JSON.stringify(data.answers, null, 4), (err) => {
 		if (err) throw err
 		console.log('The answers file has been saved!')
 	})

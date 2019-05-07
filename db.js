@@ -10,10 +10,10 @@ class DB {
 		});
 	}
 	
-	insert_user(user) {
+	insert_user(id, user) {
 		return new Promise(resolve => {
 			this.connection.query('INSERT INTO users SET ?', {
-				user_id: user.user_id,
+				user_id: id,
 				display_name: user.display_name,
 				user_type: user.user_type,
 				reputation: user.reputation || null,
@@ -26,10 +26,10 @@ class DB {
 		});
 	}
 
-	insert_question(question) {
+	insert_question(id, question) {
 		return new Promise(resolve => {
 			this.connection.query('INSERT INTO questions SET ?', {
-				question_id: question.question_id,
+				question_id: id,
 				title: question.title,
 				body: question.body,
 				view_count: question.view_count,
@@ -46,10 +46,10 @@ class DB {
 		});
 	}
 
-	insert_answer(answer) {
+	insert_answer(id, answer) {
 		return new Promise(resolve => {
 			this.connection.query('INSERT INTO answers SET ?', {
-				answer_id: answer.answer_id,
+				answer_id: id,
 				score: answer.score,
 				is_accepted: answer.is_accepted,
 				creation_date: answer.creation_date,

@@ -6,10 +6,11 @@ async function populate_users(db){
         fs.readFile('files/users.json', (err, data) => {
             if (err) throw err;
             let users = JSON.parse(data);
+            let keys = Object.keys(users);
             let count = 0;
-            users.forEach(async function (user, user_index) {
-                if (!await db.insert_user(user)) {
-                    console.log("User " + user_index + " inserted!");
+            keys.forEach(async function (key) {
+                if (!await db.insert_user(key, users[key])) {
+                    console.log("User " + key + " inserted!");
                     count++;
                 }
             });
@@ -23,15 +24,16 @@ async function populate_questions(db){
         fs.readFile('files/questions.json', (err, data) => {
             if (err) throw err;
             let questions = JSON.parse(data);
+            let keys = Object.keys(questions);
             let count = 0;
-            questions.forEach(async function (question, question_index) {
-                if (!await db.insert_question(question)) {
-                    console.log("Question " + question_index + " inserted!");
+            keys.forEach(async function (key) {
+                if (!await db.insert_question(key, questions[key])) {
+                    console.log("Question " + key + " inserted!");
                     count++;
                 }
-                question.tags.forEach(async function(tag, tag_index) {
-                    if (!await db.insert_tag(tag, question.question_id)) {
-                        console.log("Tag " + tag_index + " inserted!");
+                questions[key]["tags"].forEach(async function(tag, index) {
+                    if (!await db.insert_tag(tag, key)) {
+                        console.log("Tag " + index + " inserted!");
                     }
                 });
             });
@@ -45,20 +47,21 @@ async function populate_answers(db){
         fs.readFile('files/answers.json', (err, data) => {
             if (err) throw err;
             let answers = JSON.parse(data);
+            let keys = Object.keys(answers);
             let count = 0;
-            answers.forEach(async function (answer, answer_index) {
-                if (!await db.insert_answer(answer)) {
-                    console.log("Answer " + answer_index + " inserted!");
+            keys.forEach(async function (key) {
+                if (!await db.insert_answer(key, answers[key])) {
+                    console.log("Answer " + key + " inserted!");
                     count++;
                 }
-                answer.codes.forEach(async function(code, code_index) {
-                    if (!await db.insert_code(code, answer.answer_id)) {
-                        console.log("Code " + code_index + " inserted!");
+                answers[key]["codes"].forEach(async function(code, index) {
+                    if (!await db.insert_code(code, key)) {
+                        console.log("Code " + index + " inserted!");
                     }
                 });
             });
             resolve(count);
-        });        
+        });
     });
 };
 
@@ -66,12 +69,12 @@ async function populate() {
     var db = new DB();
     db.connection.connect();
     const count_user = await populate_users(db);
-    console.log(count_user + " users inserted!");
     const count_questions = await populate_questions(db);
-    console.log(count_questions + " questions inserted!");
     const count_answers = await populate_answers(db);
+    console.log(count_user + " users inserted!");
+    console.log(count_questions + " questions inserted!");
     console.log(count_answers + " answers inserted!");
-    db.connection.end();
+    // db.connection.end();
 }
 
 populate();
