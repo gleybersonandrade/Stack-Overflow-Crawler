@@ -9,19 +9,19 @@ First, create the database with the model in DB folder, then run the following c
 ### Crawler
 
 ```
-node crawler.js --year=<year> --month=<month> --day=<day>
+node crawler.js --language=<language> --year=<year> --month=<month> --day=<day>
 ```
 
 or
 
 ```
-node crawler.js --time=<timeinseconds>
+node crawler.js --language=<language> --time=<timeinseconds>
 ```
 
 ### Populate
 
 ```
-node populate.js
+node populate.js --language=<language>
 ```
 
 ### Linter

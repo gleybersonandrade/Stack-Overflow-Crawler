@@ -1,9 +1,12 @@
+var args = require('yargs').argv;
 var fs = require('fs');
 var DB = require('./db').DB;
 
+var lang_folder = "default";
+
 async function populate_users(db){
     return new Promise(resolve => {
-        fs.readFile('files/users.json', (err, data) => {
+        fs.readFile('files/'+lang_folder+'/users.json', (err, data) => {
             if (err) throw err;
             let users = JSON.parse(data);
             let keys = Object.keys(users);
@@ -21,7 +24,7 @@ async function populate_users(db){
 
 async function populate_questions(db){
     return new Promise(resolve => {
-        fs.readFile('files/questions.json', (err, data) => {
+        fs.readFile('files/'+lang_folder+'/questions.json', (err, data) => {
             if (err) throw err;
             let questions = JSON.parse(data);
             let keys = Object.keys(questions);
@@ -44,7 +47,7 @@ async function populate_questions(db){
 
 async function populate_answers(db){
     return new Promise(resolve => {
-        fs.readFile('files/answers.json', (err, data) => {
+        fs.readFile('files/'+lang_folder+'/answers.json', (err, data) => {
             if (err) throw err;
             let answers = JSON.parse(data);
             let keys = Object.keys(answers);
@@ -77,4 +80,7 @@ async function populate() {
     // db.connection.end();
 }
 
+if (args.language) {
+    lang_folder = args.language;
+}
 populate();

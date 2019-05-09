@@ -3,7 +3,6 @@ var DomParser = require('dom-parser');
 var fs = require('fs');
 var Stackexchange = require('stackexchange-node');
 
-var tags = ['javascript', 'php', 'python', 'ruby'];
 var options_stackoverflow = {
 	version: 2.2 
 };
@@ -21,6 +20,24 @@ var data = {
 	questions: {},
 	answers: {}
 };
+var lang_folder = "default";
+
+function make_folders() {
+	if (!fs.existsSync("files/")) {
+		fs.mkdirSync("files/", { recursive: true }, function(err){
+			if (err) {
+				return console.error(err);
+			}
+		});
+	}
+	if (!fs.existsSync("files/"+lang_folder)) {
+		fs.mkdirSync("files/"+lang_folder, { recursive: true }, function(err){
+			if (err) {
+				return console.error(err);
+			}
+		});
+	}
+}
 
 function push_user(user) {
 	data.users[user.user_id] = {
@@ -63,15 +80,15 @@ function push_answer(answer, codes, user_id) {
 }
 
 function save_data() {
-	fs.writeFile('files/users.json', JSON.stringify(data.users, null, 4), (err) => {
+	fs.writeFile('files/'+lang_folder+'/users.json', JSON.stringify(data.users, null, 4), (err) => {
 		if (err) throw err
 		console.log('The users file has been saved!')
 	})
-	fs.writeFile('files/questions.json', JSON.stringify(data.questions, null, 4), (err) => {
+	fs.writeFile('files/'+lang_folder+'/questions.json', JSON.stringify(data.questions, null, 4), (err) => {
 		if (err) throw err
 		console.log('The questions file has been saved!')
 	})
-	fs.writeFile('files/answers.json', JSON.stringify(data.answers, null, 4), (err) => {
+	fs.writeFile('files/'+lang_folder+'/answers.json', JSON.stringify(data.answers, null, 4), (err) => {
 		if (err) throw err
 		console.log('The answers file has been saved!')
 	})
@@ -80,6 +97,7 @@ function save_data() {
 function process_questions(err, results) {
 	if (err) throw err;
 	if (results.items instanceof Array) {
+		var count = 0;
 		results.items.forEach(function(question){
 			var	answers_control = {
 				filter: {
@@ -92,7 +110,7 @@ function process_questions(err, results) {
 			};
 			push_user(question.owner);
 			push_question(question, question.owner.user_id);
-			console.log('[' + data.questions.length + '] TÍTULO: ' + question.title);
+			console.log('[' + ++count + '] TÍTULO: ' + question.title);
 			context.questions.answers(answers_control.filter, function(err, results){
 				process_answers(answers_control, err, results);
 			}, [answers_control.question_id]);
@@ -103,7 +121,7 @@ function process_questions(err, results) {
 			context.search.advanced(questions_filter, process_questions)
 		} else {
 			console.log('-------------------------------');
-			console.log('TOTAL: ' + data.questions.length);
+			console.log('TOTAL: ' + count);
 			console.log('-------------------------------');
 		}
 	}
@@ -138,7 +156,12 @@ if (args.time) {
 } else if (args.day && args.month && args.year) {
 	questions_filter.fromdate = new Date(args.year + "/" + args.month + "/" + args.day).getTime() / 1000;
 }
-if (tags.length) questions_filter.tagged = tags.join(';');
+if (args.language) {
+	lang_folder = args.language;
+	questions_filter.tagged = args.language;
+}
+
+make_folders();
 var parser = new DomParser();
 var context = new Stackexchange(options_stackoverflow);
 context.search.advanced(questions_filter, process_questions);
