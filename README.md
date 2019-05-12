@@ -24,16 +24,13 @@ node crawler.js --language=<language> --time=<timeinseconds>
 node populate.js --language=<language>
 ```
 
-### Linter
-
-```
-node linter.js
-```
-
 ## Auxiliar commands
 
 Prepare database to receive data:
 
 ```
+sudo docker run --name MySQL -e MYSQL_ROOT_PASSWORD=<password> -p 3306:3306 -d mysql:latest
+docker exec -it MySQL bash
+mysql -u root -p
 ALTER USER root IDENTIFIED WITH mysql_native_password BY '<password>';
 ```

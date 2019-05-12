@@ -58,7 +58,7 @@ async function populate_answers(db){
                     count++;
                 }
                 answers[key]["codes"].forEach(async function(code, index) {
-                    if (!await db.insert_code(code, key)) {
+                    if (!await db.insert_code(code, lang_folder, key)) {
                         console.log("Code " + index + " inserted!");
                     }
                 });

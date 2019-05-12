@@ -39,6 +39,18 @@ function make_folders() {
 	}
 }
 
+function read_json_data() {
+	try {
+		data.users = JSON.parse(fs.readFileSync("files/"+lang_folder+"/users.json"));
+	} catch (err) {}
+	try {
+		data.questions = JSON.parse(fs.readFileSync("files/"+lang_folder+"/questions.json"));
+	} catch (err) {}
+	try {
+		data.answers = JSON.parse(fs.readFileSync("files/"+lang_folder+"/answers.json"));
+	} catch (err) {}
+}
+
 function push_user(user) {
 	data.users[user.user_id] = {
 		display_name: user.display_name,
@@ -161,6 +173,7 @@ if (args.language) {
 	questions_filter.tagged = args.language;
 }
 
+read_json_data();
 make_folders();
 var parser = new DomParser();
 var context = new Stackexchange(options_stackoverflow);

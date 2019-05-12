@@ -63,11 +63,12 @@ class DB {
 		});
 	}
 
-	insert_code(code, answer_id) {
+	insert_code(code, lang, answer_id) {
 		return new Promise(resolve => {
 			this.connection.query('INSERT INTO codes SET ?', {
 				code_id: 0,
 				body: code,
+				lang: lang,
 				answers_answer_id: answer_id
 			}, function(err) {
 				resolve(err);
@@ -86,21 +87,26 @@ class DB {
 		});
 	}
 
-	insert_lint(lint, code_id) {
+	insert_lint(ruleId, message, code_id) {
 		return new Promise(resolve => {
 			this.connection.query('INSERT INTO lints SET ?', {
-				rule: lint.ruleId,
-				codes_code_id: code_id,
-				message: lint.message
+				lint_id: 0,
+				rule: ruleId,
+				message: message,
+				codes_code_id: code_id
 			}, function(err) {
 				resolve(err);
 			});
 		});
 	}
 
-	select_codes() {
+	select_codes(lang=null) {
 		return new Promise(resolve => {
-			this.connection.query('SELECT * FROM codes', function(err, result){
+			var query = 'SELECT * FROM codes';
+			if (lang != null) {
+				query += ' WHERE lang = "' + lang +'"';
+			}
+			this.connection.query(query, function(err, result){
 				resolve(result);
 			});
 		});
