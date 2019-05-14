@@ -1,372 +1,427 @@
 {
-    "3059129": {
-        "score": "1077",
-        "questions_question_id": "3059044",
-        "user_id": "222908"
+    "3939747": {
+        "score": "41",
+        "questions_question_id": "3939715",
+        "user_id": "446591"
     },
-    "14220323": {
-        "score": "5196",
-        "questions_question_id": "14220321",
-        "user_id": "218196"
+    "3939752": {
+        "score": "184",
+        "questions_question_id": "3939715",
+        "user_id": "22595"
     },
-    "15300858": {
-        "score": "55",
-        "questions_question_id": "3059044",
-        "user_id": "782535"
+    "7506883": {
+        "score": "6",
+        "questions_question_id": "7506844",
+        "user_id": "1942"
     },
-    "16825593": {
-        "score": "998",
-        "questions_question_id": "14220321",
-        "user_id": "1348195"
+    "7506902": {
+        "score": "1",
+        "questions_question_id": "7506844",
+        "user_id": "34397"
     },
-    "18309057": {
-        "score": "362",
-        "questions_question_id": "14220321",
-        "user_id": "2450730"
-    },
-    "19420440": {
-        "score": "14",
-        "questions_question_id": "3059044",
-        "user_id": "2047151"
-    },
-    "21430558": {
-        "score": "33",
-        "questions_question_id": "3059044",
-        "user_id": "1856970"
-    },
-    "21862907": {
-        "score": "219",
-        "questions_question_id": "14220321",
-        "user_id": "1560518"
-    },
-    "23819901": {
-        "score": "229",
-        "questions_question_id": "14220321",
-        "user_id": "2802187"
-    },
-    "24082429": {
-        "score": "20",
-        "questions_question_id": "3059044",
-        "user_id": "2169198"
-    },
-    "25501002": {
-        "score": "142",
-        "questions_question_id": "14220321",
-        "user_id": "814025"
-    },
-    "28727535": {
-        "score": "11",
-        "questions_question_id": "3059044",
-        "user_id": "425714"
-    },
-    "30180679": {
-        "score": "290",
-        "questions_question_id": "14220321",
-        "user_id": "1348195"
-    },
-    "32353763": {
-        "score": "84",
-        "questions_question_id": "14220321",
-        "user_id": "507136"
-    },
-    "32750752": {
-        "score": "32",
-        "questions_question_id": "14220321",
-        "user_id": "170383"
-    },
-    "34998848": {
-        "score": "76",
-        "questions_question_id": "14220321",
-        "user_id": "3664835"
-    },
-    "36585554": {
-        "score": "69",
-        "questions_question_id": "14220321",
-        "user_id": "758836"
-    },
-    "36796920": {
-        "score": "72",
-        "questions_question_id": "14220321",
-        "user_id": "3645944"
-    },
-    "37462229": {
-        "score": "59",
-        "questions_question_id": "14220321",
-        "user_id": "4966443"
-    },
-    "37586557": {
-        "score": "96",
-        "questions_question_id": "14220321",
-        "user_id": "6382034"
-    },
-    "38113268": {
-        "score": "2",
-        "questions_question_id": "3059044",
-        "user_id": "1071884"
-    },
-    "38898933": {
-        "score": "194",
-        "questions_question_id": "14220321",
-        "user_id": "171933"
-    },
-    "38931349": {
-        "score": "36",
-        "questions_question_id": "14220321",
-        "user_id": "2234618"
-    },
-    "39318841": {
-        "score": "2",
-        "questions_question_id": "3059044",
-        "user_id": "3117416"
-    },
-    "40814120": {
-        "score": "7",
-        "questions_question_id": "3059044",
-        "user_id": "3192470"
-    },
-    "43361337": {
+    "7506915": {
         "score": "5",
-        "questions_question_id": "3059044",
-        "user_id": "7426383"
+        "questions_question_id": "7506844",
+        "user_id": "845198"
     },
-    "43582897": {
-        "score": "33",
-        "questions_question_id": "14220321",
-        "user_id": "6570691"
+    "7506937": {
+        "score": "110",
+        "questions_question_id": "7506844",
+        "user_id": "546661"
     },
-    "43766002": {
-        "score": "121",
-        "questions_question_id": "14220321",
-        "user_id": "157247"
+    "23712043": {
+        "score": "3",
+        "questions_question_id": "7506844",
+        "user_id": "1535443"
     },
-    "44154594": {
-        "score": "79",
-        "questions_question_id": "14220321",
-        "user_id": "5423108"
+    "24644450": {
+        "score": "453",
+        "questions_question_id": "24644436",
+        "user_id": "250259"
     },
-    "44212447": {
-        "score": "53",
-        "questions_question_id": "14220321",
-        "user_id": "1464130"
+    "24644685": {
+        "score": "20",
+        "questions_question_id": "24644436",
+        "user_id": "2651594"
     },
-    "44325931": {
-        "score": "66",
-        "questions_question_id": "14220321",
-        "user_id": "123671"
+    "24644887": {
+        "score": "15",
+        "questions_question_id": "24644436",
+        "user_id": "1258544"
     },
-    "44935441": {
-        "score": "25",
-        "questions_question_id": "14220321",
-        "user_id": "2612644"
+    "25130891": {
+        "score": "9",
+        "questions_question_id": "24644436",
+        "user_id": "3867918"
     },
-    "46923420": {
-        "score": "13",
-        "questions_question_id": "14220321",
-        "user_id": "8570409"
+    "26225919": {
+        "score": "6",
+        "questions_question_id": "24644436",
+        "user_id": "4114998"
     },
-    "47043798": {
-        "score": "42",
-        "questions_question_id": "14220321",
-        "user_id": "5013932"
+    "26957146": {
+        "score": "0",
+        "questions_question_id": "7506844",
+        "user_id": "4188735"
     },
-    "48243403": {
-        "score": "24",
-        "questions_question_id": "14220321",
-        "user_id": "6109688"
+    "27751178": {
+        "score": "8",
+        "questions_question_id": "24644436",
+        "user_id": "4382105"
     },
-    "48415961": {
-        "score": "14",
-        "questions_question_id": "14220321",
-        "user_id": "4612927"
+    "28457941": {
+        "score": "9",
+        "questions_question_id": "24644436",
+        "user_id": "4555342"
     },
-    "48594476": {
-        "score": "54",
-        "questions_question_id": "14220321",
-        "user_id": "7579856"
+    "29630307": {
+        "score": "1",
+        "questions_question_id": "7506844",
+        "user_id": "2938222"
     },
-    "48842851": {
+    "30351014": {
+        "score": "21",
+        "questions_question_id": "24644436",
+        "user_id": "4042064"
+    },
+    "31000935": {
+        "score": "4",
+        "questions_question_id": "24644436",
+        "user_id": "5039870"
+    },
+    "31377611": {
+        "score": "6",
+        "questions_question_id": "24644436",
+        "user_id": "3815088"
+    },
+    "31655218": {
         "score": "36",
-        "questions_question_id": "14220321",
-        "user_id": "1185191"
+        "questions_question_id": "24644436",
+        "user_id": "1537006"
     },
-    "50178868": {
-        "score": "12",
-        "questions_question_id": "14220321",
-        "user_id": "4866533"
+    "32580385": {
+        "score": "6",
+        "questions_question_id": "24644436",
+        "user_id": "5023042"
     },
-    "54762623": {
-        "score": "3",
-        "questions_question_id": "3059044",
-        "user_id": "1045296"
+    "32846544": {
+        "score": "13",
+        "questions_question_id": "24644436",
+        "user_id": "4105608"
     },
-    "56101649": {
-        "score": "1",
-        "questions_question_id": "56101594",
-        "user_id": "11251344"
-    },
-    "56101717": {
-        "score": "1",
-        "questions_question_id": "56101594",
-        "user_id": "4964822"
-    },
-    "56101832": {
-        "score": "1",
-        "questions_question_id": "56101594",
-        "user_id": "6003521"
-    },
-    "56103881": {
-        "score": "1",
-        "questions_question_id": "56103791",
-        "user_id": "1458413"
-    },
-    "56103958": {
-        "score": "0",
-        "questions_question_id": "56103942",
-        "user_id": "10530564"
-    },
-    "56103993": {
-        "score": "0",
-        "questions_question_id": "56103942",
-        "user_id": "11483018"
-    },
-    "56104044": {
-        "score": "1",
-        "questions_question_id": "56103937",
-        "user_id": "979052"
-    },
-    "56104064": {
-        "score": "1",
-        "questions_question_id": "56103937",
-        "user_id": "5078746"
-    },
-    "56104071": {
-        "score": "1",
-        "questions_question_id": "56103937",
-        "user_id": "5458806"
-    },
-    "56104076": {
-        "score": "1",
-        "questions_question_id": "56103937",
-        "user_id": "10560743"
-    },
-    "56104096": {
-        "score": "0",
-        "questions_question_id": "56103834",
-        "user_id": "3639777"
-    },
-    "56104099": {
-        "score": "0",
-        "questions_question_id": "56104043",
-        "user_id": "7089383"
-    },
-    "56104119": {
-        "score": "0",
-        "questions_question_id": "56104043",
-        "user_id": "7217301"
-    },
-    "56104188": {
-        "score": "1",
-        "questions_question_id": "56104132",
-        "user_id": "11483018"
-    },
-    "56104269": {
-        "score": "0",
-        "questions_question_id": "56104237",
-        "user_id": "1575725"
-    },
-    "56104314": {
-        "score": "3",
-        "questions_question_id": "56104285",
-        "user_id": "328193"
-    },
-    "56104315": {
-        "score": "-1",
-        "questions_question_id": "56104285",
-        "user_id": "9511827"
-    },
-    "56104415": {
-        "score": "0",
-        "questions_question_id": "56104391",
-        "user_id": "5445670"
-    },
-    "56104423": {
-        "score": "0",
-        "questions_question_id": "56104391",
-        "user_id": "4964569"
-    },
-    "56104426": {
-        "score": "0",
-        "questions_question_id": "56104363",
-        "user_id": "6080254"
-    },
-    "56104437": {
-        "score": "0",
-        "questions_question_id": "56104363",
-        "user_id": "10634843"
-    },
-    "56104444": {
-        "score": "0",
-        "questions_question_id": "56104265",
-        "user_id": "7876137"
-    },
-    "56104486": {
-        "score": "0",
-        "questions_question_id": "56104066",
-        "user_id": "7308740"
-    },
-    "56104508": {
-        "score": "0",
-        "questions_question_id": "56104482",
-        "user_id": "5496808"
-    },
-    "56104563": {
+    "35114803": {
         "score": "2",
-        "questions_question_id": "56104521",
-        "user_id": "9515207"
+        "questions_question_id": "24644436",
+        "user_id": "3312132"
     },
-    "56104614": {
-        "score": "0",
-        "questions_question_id": "56104066",
-        "user_id": "9719505"
+    "35316493": {
+        "score": "3",
+        "questions_question_id": "24644436",
+        "user_id": "1946501"
     },
-    "56104627": {
+    "37123132": {
         "score": "0",
-        "questions_question_id": "56104389",
-        "user_id": "10366495"
+        "questions_question_id": "7506844",
+        "user_id": "2296997"
     },
-    "56104642": {
-        "score": "0",
-        "questions_question_id": "56104621",
-        "user_id": "5157454"
+    "37347123": {
+        "score": "8",
+        "questions_question_id": "24644436",
+        "user_id": "2370483"
     },
-    "56104647": {
-        "score": "0",
-        "questions_question_id": "56104621",
-        "user_id": "9515207"
+    "37986934": {
+        "score": "10",
+        "questions_question_id": "24644436",
+        "user_id": "1972871"
     },
-    "56104657": {
-        "score": "0",
-        "questions_question_id": "56104621",
-        "user_id": "10768127"
+    "41199567": {
+        "score": "1",
+        "questions_question_id": "7506844",
+        "user_id": "5934465"
     },
-    "56104665": {
-        "score": "0",
-        "questions_question_id": "56104621",
-        "user_id": "1380422"
+    "43152499": {
+        "score": "1",
+        "questions_question_id": "24644436",
+        "user_id": "4748205"
     },
-    "56104667": {
-        "score": "0",
-        "questions_question_id": "56104419",
-        "user_id": "11321804"
+    "43220191": {
+        "score": "2",
+        "questions_question_id": "24644436",
+        "user_id": "7653459"
     },
-    "56104677": {
-        "score": "0",
-        "questions_question_id": "56103788",
-        "user_id": "2620080"
+    "43524983": {
+        "score": "1",
+        "questions_question_id": "7506844",
+        "user_id": "5373447"
     },
-    "56104702": {
+    "43533987": {
         "score": "0",
-        "questions_question_id": "56104621",
+        "questions_question_id": "7506844",
+        "user_id": "7720908"
+    },
+    "44675686": {
+        "score": "3",
+        "questions_question_id": "24644436",
+        "user_id": "3132194"
+    },
+    "46386409": {
+        "score": "3",
+        "questions_question_id": "24644436",
+        "user_id": "6719819"
+    },
+    "46680402": {
+        "score": "0",
+        "questions_question_id": "24644436",
+        "user_id": "5470728"
+    },
+    "48797103": {
+        "score": "0",
+        "questions_question_id": "7506844",
+        "user_id": "5855725"
+    },
+    "49033521": {
+        "score": "0",
+        "questions_question_id": "7506844",
+        "user_id": "4916589"
+    },
+    "49370643": {
+        "score": "3",
+        "questions_question_id": "24644436",
+        "user_id": "8133036"
+    },
+    "50112762": {
+        "score": "0",
+        "questions_question_id": "7506844",
+        "user_id": "9266400"
+    },
+    "53904381": {
+        "score": "-1",
+        "questions_question_id": "24644436",
+        "user_id": "7669684"
+    },
+    "54336142": {
+        "score": "0",
+        "questions_question_id": "3939715",
+        "user_id": "4781067"
+    },
+    "54674227": {
+        "score": "0",
+        "questions_question_id": "7506844",
+        "user_id": "4501354"
+    },
+    "55836766": {
+        "score": "0",
+        "questions_question_id": "24644436",
+        "user_id": "2525948"
+    },
+    "56121427": {
+        "score": "3",
+        "questions_question_id": "56121389",
+        "user_id": "5567387"
+    },
+    "56121440": {
+        "score": "0",
+        "questions_question_id": "56121389",
+        "user_id": "5735151"
+    },
+    "56121539": {
+        "score": "0",
+        "questions_question_id": "56121290",
+        "user_id": "43848"
+    },
+    "56121606": {
+        "score": "0",
+        "questions_question_id": "56121501",
+        "user_id": "7926159"
+    },
+    "56121623": {
+        "score": "2",
+        "questions_question_id": "56121598",
+        "user_id": "11474744"
+    },
+    "56121652": {
+        "score": "2",
+        "questions_question_id": "56121573",
+        "user_id": "3385827"
+    },
+    "56121662": {
+        "score": "1",
+        "questions_question_id": "56121589",
+        "user_id": "7759514"
+    },
+    "56121737": {
+        "score": "1",
+        "questions_question_id": "56121626",
+        "user_id": "6504633"
+    },
+    "56121751": {
+        "score": "0",
+        "questions_question_id": "56121290",
+        "user_id": "5196394"
+    },
+    "56121768": {
+        "score": "0",
+        "questions_question_id": "56121635",
+        "user_id": "10136560"
+    },
+    "56121797": {
+        "score": "0",
+        "questions_question_id": "56121744",
+        "user_id": "10339344"
+    },
+    "56121798": {
+        "score": "1",
+        "questions_question_id": "56121589",
+        "user_id": "1108891"
+    },
+    "56121999": {
+        "score": "0",
+        "questions_question_id": "56121489",
+        "user_id": "7723122"
+    },
+    "56122015": {
+        "score": "2",
+        "questions_question_id": "56122002",
+        "user_id": "2303610"
+    },
+    "56122050": {
+        "score": "0",
+        "questions_question_id": "56121556",
+        "user_id": "1487102"
+    },
+    "56122067": {
+        "score": "4",
+        "questions_question_id": "56122059",
+        "user_id": "3786617"
+    },
+    "56122138": {
+        "score": "0",
+        "questions_question_id": "56121398",
+        "user_id": "9837329"
+    },
+    "56122145": {
+        "score": "1",
+        "questions_question_id": "56122100",
+        "user_id": "2930661"
+    },
+    "56122156": {
+        "score": "0",
+        "questions_question_id": "56122100",
+        "user_id": "7154609"
+    },
+    "56122234": {
+        "score": "-1",
+        "questions_question_id": "56122085",
+        "user_id": "9642391"
+    },
+    "56122236": {
+        "score": "1",
+        "questions_question_id": "56122114",
+        "user_id": "3760915"
+    },
+    "56122241": {
+        "score": "1",
+        "questions_question_id": "56122100",
+        "user_id": "7021694"
+    },
+    "56122263": {
+        "score": "0",
+        "questions_question_id": "56122100",
+        "user_id": "860099"
+    },
+    "56122268": {
+        "score": "0",
+        "questions_question_id": "56122100",
+        "user_id": "10221765"
+    },
+    "56122334": {
+        "score": "0",
+        "questions_question_id": "56122305",
+        "user_id": "10221765"
+    },
+    "56122343": {
+        "score": "0",
+        "questions_question_id": "56122114",
+        "user_id": "860099"
+    },
+    "56122360": {
+        "score": "0",
+        "questions_question_id": "56121747",
+        "user_id": "7693185"
+    },
+    "56122389": {
+        "score": "1",
+        "questions_question_id": "56122351",
+        "user_id": "10221765"
+    },
+    "56122412": {
+        "score": "3",
+        "questions_question_id": "56122351",
+        "user_id": "10467477"
+    },
+    "56122441": {
+        "score": "0",
+        "questions_question_id": "56122305",
+        "user_id": "3431558"
+    },
+    "56122463": {
+        "score": "1",
+        "questions_question_id": "56122413",
+        "user_id": "860099"
+    },
+    "56122503": {
+        "score": "1",
+        "questions_question_id": "56122467",
         "user_id": "5867572"
+    },
+    "56122512": {
+        "score": "0",
+        "questions_question_id": "56122467",
+        "user_id": "10463549"
+    },
+    "56122538": {
+        "score": "0",
+        "questions_question_id": "56121166",
+        "user_id": "5535245"
+    },
+    "56122543": {
+        "score": "1",
+        "questions_question_id": "56122523",
+        "user_id": "10030970"
+    },
+    "56122547": {
+        "score": "0",
+        "questions_question_id": "56122023",
+        "user_id": "209103"
+    },
+    "56122548": {
+        "score": "2",
+        "questions_question_id": "56122523",
+        "user_id": "8175059"
+    },
+    "56122551": {
+        "score": "-1",
+        "questions_question_id": "56122519",
+        "user_id": "11099320"
+    },
+    "56122565": {
+        "score": "1",
+        "questions_question_id": "56122523",
+        "user_id": "4908415"
+    },
+    "56122567": {
+        "score": "1",
+        "questions_question_id": "56122519",
+        "user_id": "9515207"
+    },
+    "56122613": {
+        "score": "0",
+        "questions_question_id": "56122372",
+        "user_id": "10068463"
+    },
+    "56122622": {
+        "score": "-1",
+        "questions_question_id": "56122523",
+        "user_id": "8842270"
     }
 }

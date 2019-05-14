@@ -1,12 +1,11 @@
 var Crawler = require("crawler");
 var fs = require('fs');
-var striptags = require('striptags');
 
 var options = {
-    // "page_lenth": 36153
     "url": "https://stackoverflow.com",
     "lang": "javascript",
-    "page_lenth": 1,
+    "timeout": 500,
+    "page_lenth": 5,
     "per_page": 50
 }
 
@@ -87,6 +86,7 @@ function push_answer(answer) {
 
 var user_crawler = new Crawler({
     maxConnections : 10,
+    rateLimit: options.timeout,
     callback : function (error, res, done) {
         if (error){
             console.log(error);
@@ -113,6 +113,7 @@ var user_crawler = new Crawler({
 
 var question_crawler = new Crawler({
     maxConnections : 10,
+    rateLimit: options.timeout,
     callback : function (error, res, done) {
         if (error){
             console.log(error);
@@ -152,6 +153,7 @@ var question_crawler = new Crawler({
 
 var answer_crawler = new Crawler({
     maxConnections : 10,
+    rateLimit: options.timeout,
     callback : function (error, res, done) {
         if (error){
             console.log(error);
@@ -192,6 +194,7 @@ var answer_crawler = new Crawler({
 
 var search_crawler = new Crawler({
     maxConnections : 10,
+    rateLimit: options.timeout,
     callback : function (error, res, done) {
         if (error){
             console.log(error);
