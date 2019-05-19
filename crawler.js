@@ -7,8 +7,8 @@ const URL = "https://stackoverflow.com";
 var options = {
     "lang": args.language || "",
     "sort": args.sort || "newest",
-    "timeout": args.timeout || 5000,
-    "init_page": args.init || 1,
+    "timeout": args.timeout || 3000,
+    "init_page": args.begin || 1,
     "end_page": args.end || 1,
     "per_page": args.size || 50
 }
@@ -66,6 +66,17 @@ function save_data() {
     );
 }
 
+function push_user(user) {
+	data.users[user.id] = {
+        display_name: user.display_name,
+        reputation: parseInt(user.reputation),
+        gold_badges: parseInt(user.gold_badges),
+        silver_badges: parseInt(user.silver_badges),
+        bronze_badges: parseInt(user.bronze_badges),
+        link: user.link
+	};
+}
+
 function push_question(question) {
 	data.questions[question.id] = {
 		title: question.title,
@@ -79,20 +90,6 @@ function push_question(question) {
 	};
 }
 
-function push_user(user) {
-	data.users[user.id] = {
-        display_name: user.display_name,
-        role: user.role,
-        bio: bio,
-        profile_image: user.profile_image,
-        reputation: parseInt(user.reputation),
-        gold_badges: parseInt(user.gold_badges),
-        silver_badges: parseInt(user.silver_badges),
-        bronze_badges: parseInt(user.bronze_badges),
-        link: user.link
-	};
-}
-
 function push_answer(answer) {
 	data.answers[answer.id] = {
         score: parseInt(answer.score),
@@ -103,51 +100,84 @@ function push_answer(answer) {
 	};
 }
 
-var user_crawler = new Crawler({
-    maxConnections : 10,
-    rateLimit: options.timeout,
-    callback : function (error, res, done) {
-        if (error){
-            console.log(error);
-        } else {
-            var $ = res.$;
-
-            display_name = $("#user-card .profile-user--name div").text();
-            role = $("#user-card .profile-user--role").text();
-            bio = $("#user-card .profile-user--bio p").text();
-            reputation = $("#avatar-card .grid__center .fs-title").text().replace(',','');
-            gold_badges = silver_badges = bronze_badges = 0;
-            $("#avatar-card .grid__fl1 .ai-center").map(function() {
-                temp = $(this).attr("title").split(" ");
-                if (temp[1] == "gold") {
-                    gold_badges = temp[0];
-                } else if (temp[1] == "silver") {
-                    silver_badges = temp[0];
-                } else if (temp[1] == "bronze") {
-                    bronze_badges = temp[0];
+function get_user($, user_info) {
+    user_link = URL+user_info.find(".user-details a").attr("href");
+    user_id = user_link.split("/")[4];
+    user_display_name = user_info.find(".user-details a").text();
+    reputation = gold_badges = silver_badges = bronze_badges = 0;
+    user_info.find(".user-details .-flair span").map(function() {
+        if ($(this).attr("title")){
+            temp = $(this).attr("title").split(" ");
+            if (temp[1] =="score"){
+                if (temp[2]) {
+                    reputation = temp[2];
+                } else {
+                    reputation = $(this).text();
                 }
-            });
-
-            link = $("#avatar-card a").attr("href");
-            profile_image = $("#avatar-card img").attr("src");
-            user = {
-                id: res.options.user_id,
-                display_name: display_name,
-                role: role,
-                bio: bio,
-                profile_image: profile_image,
-                reputation: reputation,
-                gold_badges: gold_badges,
-                silver_badges: silver_badges,
-                bronze_badges: bronze_badges,
-                link: link
+                reputation = reputation.replace(',','');
+            } else if (temp[1] == "gold") {
+                gold_badges = temp[0];
+            } else if (temp[1] == "silver") {
+                silver_badges = temp[0];
+            } else if (temp[1] == "bronze") {
+                bronze_badges = temp[0];
             }
-            push_user(user);
-            save_data();
         }
-        done();
+    });
+    return {
+        id: user_id,
+        display_name: user_display_name,
+        reputation: reputation,
+        gold_badges: gold_badges,
+        silver_badges: silver_badges,
+        bronze_badges: bronze_badges,
+        link: user_link
     }
-});
+}
+
+function get_question($, user, user_id) {
+    question_id = $("#question").attr("data-questionid");
+    question_title = $("#question-header h1 a").text();
+    question_body = $("#question .post-text").text();
+    question_score = $("#question .js-vote-count").text();
+    question_info = $("#qinfo tr td b").map(function() {
+        return $(this);
+    }).toArray();
+    question_creation = user.find(".user-action-time span").attr("title");
+    question_views = question_info[1].text().split(" ")[0].replace(',', '');
+    question_link = URL+$("#question-header h1 a").attr("href");
+    question_tags = $("#question .post-taglist a").map(function() {
+        return $(this).text();
+    }).toArray();
+    return {
+        id: question_id,
+        title: question_title,
+        body: question_body,
+        views: question_views,
+        score: question_score,
+        link: question_link,
+        creation_date: question_creation,
+        tags: question_tags,
+        user_id: user_id
+    }
+}
+
+function get_answer($, answer, user, user_id, question_id) {
+    answer_id = answer.attr("data-answerid");
+    answer_score = answer.find(".js-vote-count").attr("data-value");
+    answer_codes = answer.find(".post-text code").map(function() {
+        return $(this).text();
+    }).toArray();
+    answer_creation = user.find(".user-action-time span").attr("title");
+    return {
+        id: answer_id,
+        score: answer_score,
+        creation_date: answer_creation,
+        codes: answer_codes,
+        question_id: question_id,
+        user_id: user_id
+    }
+}
 
 var question_crawler = new Crawler({
     maxConnections : 10,
@@ -158,45 +188,17 @@ var question_crawler = new Crawler({
         } else {
             var $ = res.$;
 
-            user = $("#question .user-info").map(function() {
+            user_info = $("#question .user-info").map(function() {
                 if ($(this).find(".user-details").attr("itemprop") == "author") {
                     return $(this);
                 }
             }).toArray()[0];
-            if (user !== undefined) {
-                user_link = URL+user.find(".user-details a").attr("href");
-                user_id = user_link.split("/")[4];
-                user_crawler.queue({
-                    uri:user_link,
-                    user_id:user_id
-                });
 
-                question_id = $("#question").attr("data-questionid");
-                question_title = $("#question-header h1 a").text();
-                question_body = $("#question .post-text").text();
-                question_score = $("#question .js-vote-count").text();
-                question_info = $("#qinfo tr td b").map(function() {
-                    return $(this);
-                }).toArray();
-                question_creation = user.find(".user-action-time span").attr("title");
-                question_views = question_info[1].text().split(" ")[0].replace(',', '');
-                question_link = URL+$("#question-header h1 a").attr("href");
-                question_tags = $("#question .post-taglist a").map(function() {
-                    return $(this).text();
-                }).toArray();
-                question = {
-                    id: question_id,
-                    title: question_title,
-                    body: question_body,
-                    views: question_views,
-                    score: question_score,
-                    link: question_link,
-                    creation_date: question_creation,
-                    tags: question_tags,
-                    user_id: user_id
-                }
+            if (user_info !== undefined) {
+                user = get_user($, user_info);
+                question = get_question($, user_info, user.id);
+                push_user(user);
                 push_question(question);
-                save_data();
 
                 pages_count = $("#answers .pager-answers a").map(function() {
                     return $(this);
@@ -209,6 +211,7 @@ var question_crawler = new Crawler({
                 }
             }
         }
+        save_data();
         done();
     }
 });
@@ -223,40 +226,21 @@ var answer_crawler = new Crawler({
             var $ = res.$;
 
             $("#answers .answer").each(function() {
-                user = $(this).find(".user-info").map(function() {
+                user_info = $(this).find(".user-info").map(function() {
                     if ($(this).find(".user-details").attr("itemprop") == "author") {
                         return $(this);
                     }
                 }).toArray()[0];
-                if (user !== undefined) {
-                    user_link = URL+user.find(".user-details a").attr("href");
-                    user_id = user_link.split("/")[4];
-                    user_crawler.queue({
-                        uri:user_link,
-                        user_id:user_id
-                    });
 
-                    answer_id = $(this).attr("data-answerid");
-                    answer_score = $(this).find(".js-vote-count").attr("data-value");
-                    answer_codes = $(this).find(".post-text code").map(function() {
-                        return $(this).text();
-                    }).toArray()
-                    answer_creation = user.find(".user-action-time span").attr("title");
-                    question_id = res.options.question_id;
-                    answer = {
-                        id: answer_id,
-                        score: answer_score,
-                        creation_date: answer_creation,
-                        codes: answer_codes,
-                        question_id: question_id,
-                        user_id: user_id
-                    }
+                if (user_info !== undefined) {
+                    user = get_user($, user_info);
+                    answer = get_answer($, $(this), user_info, user.id, res.options.question_id);
+                    push_user(user);
                     push_answer(answer);
-                    save_data();
                 }
             });
-
         }
+        save_data();
         done();
     }
 });

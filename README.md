@@ -9,7 +9,7 @@ First, create the database with the model in DB folder, then run the following c
 ### Crawler
 
 ```
-node crawler.js --language=<language> --sort=<newest,featured,frequent,votes,active> --init=<beginning page> --end=<final page> --size=<page size> --timeout=<timeout>
+node crawler.js --language=<language> --sort=<newest,featured,frequent,votes,active> --begin=<beginning page> --end=<final page> --size=<page size> --timeout=<timeout>
 ```
 
 or
