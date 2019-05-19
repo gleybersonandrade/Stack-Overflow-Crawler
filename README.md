@@ -9,13 +9,13 @@ First, create the database with the model in DB folder, then run the following c
 ### Crawler
 
 ```
-node crawler.js --language=<language> --year=<year> --month=<month> --day=<day>
+node crawler.js --language=<language> --sort=<newest,featured,frequent,votes,active> --init=<beginning page> --end=<final page> --size=<page size> --timeout=<timeout>
 ```
 
 or
 
 ```
-node crawler.js --language=<language> --time=<timeinseconds>
+node crawler.js --url=<question url> --timeout=<timeout>
 ```
 
 ### Populate

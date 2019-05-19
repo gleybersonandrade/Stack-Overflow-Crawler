@@ -1,26 +1,23 @@
 var args = require('yargs').argv;
-var DomParser = require('dom-parser');
+var Crawler = require("crawler");
 var fs = require('fs');
-var Stackexchange = require('stackexchange-node');
 
-var options_stackoverflow = {
-	version: 2.2 
-};
-var questions_filter = {
-	key: 'F62k*pfvO0OEnM6rpB37Fg((',
-	page: 1,
-	pagesize: 100,
-	sort: 'activity',
-	order: 'asc',
-	fromdate: 0,
-	filter: 'withbody'
-};
+const URL = "https://stackoverflow.com";
+
+var options = {
+    "lang": args.language || "",
+    "sort": args.sort || "newest",
+    "timeout": args.timeout || 5000,
+    "init_page": args.init || 1,
+    "end_page": args.end || 1,
+    "per_page": args.size || 50
+}
+
 var data = {
 	users: {},
 	questions: {},
 	answers: {}
 };
-var lang_folder = "default";
 
 function make_folders() {
 	if (!fs.existsSync("files/")) {
@@ -30,8 +27,8 @@ function make_folders() {
 			}
 		});
 	}
-	if (!fs.existsSync("files/"+lang_folder)) {
-		fs.mkdirSync("files/"+lang_folder, { recursive: true }, function(err){
+	if (!fs.existsSync("files/"+options.lang)) {
+		fs.mkdirSync("files/"+options.lang, { recursive: true }, function(err){
 			if (err) {
 				return console.error(err);
 			}
@@ -41,140 +38,253 @@ function make_folders() {
 
 function read_json_data() {
 	try {
-		data.users = JSON.parse(fs.readFileSync("files/"+lang_folder+"/users.json"));
+		data.users = JSON.parse(fs.readFileSync("files/"+options.lang+"/users.json"));
 	} catch (err) {}
 	try {
-		data.questions = JSON.parse(fs.readFileSync("files/"+lang_folder+"/questions.json"));
+		data.questions = JSON.parse(fs.readFileSync("files/"+options.lang+"/questions.json"));
 	} catch (err) {}
 	try {
-		data.answers = JSON.parse(fs.readFileSync("files/"+lang_folder+"/answers.json"));
+		data.answers = JSON.parse(fs.readFileSync("files/"+options.lang+"/answers.json"));
 	} catch (err) {}
-}
-
-function push_user(user) {
-	data.users[user.user_id] = {
-		display_name: user.display_name,
-		user_type: user.user_type,
-		reputation: user.reputation,
-		accept_rate: user.accept_rate,
-		link: user.link,
-		profile_image: user.profile_image
-	};
-}
-
-function push_question(question, user_id) {
-	data.questions[question.question_id] = {
-		title: question.title,
-		body: question.body,
-		view_count: question.view_count,
-		answers_count: question.answer_count,
-		score: question.score,
-		link: question.link,
-		creation_date: question.creation_date,
-		last_activity_date: question.last_activity_date,
-		last_edit_date: question.last_edit_date,
-		tags: question.tags,
-		user_id: user_id
-	};
-}
-
-function push_answer(answer, codes, user_id) {
-	data.answers[answer.answer_id] = {
-		score: answer.score,
-		is_accepted: answer.is_accepted,
-		creation_date: answer.creation_date,
-		last_activity_date: answer.last_activity_date,
-		last_edit_date: answer.last_edit_date,
-		codes: codes,
-		questions_question_id: answer.question_id,
-		user_id: user_id
-	};
 }
 
 function save_data() {
-	fs.writeFile('files/'+lang_folder+'/users.json', JSON.stringify(data.users, null, 4), (err) => {
-		if (err) throw err
-		console.log('The users file has been saved!')
+	fs.writeFile('files/'+options.lang+'/users.json', JSON.stringify(data.users, null, 4), (err) => {
+		if (err) throw err;
 	})
-	fs.writeFile('files/'+lang_folder+'/questions.json', JSON.stringify(data.questions, null, 4), (err) => {
-		if (err) throw err
-		console.log('The questions file has been saved!')
+	fs.writeFile('files/'+options.lang+'/questions.json', JSON.stringify(data.questions, null, 4), (err) => {
+		if (err) throw err;
 	})
-	fs.writeFile('files/'+lang_folder+'/answers.json', JSON.stringify(data.answers, null, 4), (err) => {
-		if (err) throw err
-		console.log('The answers file has been saved!')
-	})
+	fs.writeFile('files/'+options.lang+'/answers.json', JSON.stringify(data.answers, null, 4), (err) => {
+		if (err) throw err;
+    })
+    
+    console.log('Files have been updated!' +
+        ' USERS: '+Object.keys(data.users).length +
+        ' QUESTIONS: '+Object.keys(data.questions).length +
+        ' ANSWERS: '+Object.keys(data.answers).length
+    );
 }
 
-function process_questions(err, results) {
-	if (err) throw err;
-	if (results.items instanceof Array) {
-		var count = 0;
-		results.items.forEach(function(question){
-			var	answers_control = {
-				filter: {
-					key: questions_filter.key,
-					page: 1,
-					pagesize: 100,
-					filter: 'withbody'
-				},
-				question_id: question.question_id
-			};
-			push_user(question.owner);
-			push_question(question, question.owner.user_id);
-			console.log('[' + ++count + '] TÍTULO: ' + question.title);
-			context.questions.answers(answers_control.filter, function(err, results){
-				process_answers(answers_control, err, results);
-			}, [answers_control.question_id]);
-		});
-		save_data();
-		if (results.has_more) {
-			++questions_filter.page;
-			context.search.advanced(questions_filter, process_questions)
-		} else {
-			console.log('-------------------------------');
-			console.log('TOTAL: ' + count);
-			console.log('-------------------------------');
-		}
-	}
+function push_question(question) {
+	data.questions[question.id] = {
+		title: question.title,
+        body: question.body,
+        views: parseInt(question.views),
+        score: parseInt(question.score),
+        link: question.link,
+        creation_date: question.creation_date,
+        tags: question.tags,
+        user_id: question.user_id
+	};
 }
 
-function process_answers(answers_control, err, results) {
-	if (err) throw err;
-	if (results.items instanceof Array) {
-		results.items.forEach(function(answer){
-			var htmlDoc = parser.parseFromString(answer.body, 'text/html');
-			var codes = [];
-			htmlDoc.getElementsByTagName('code').forEach(function(code) {
-				codes.push(code.innerHTML);
-			})
-			push_user(answer.owner);
-			push_answer(answer, codes, answer.owner.user_id);
-		});
-		if (results.has_more) {
-			++answers_control.filter.page;
-			context.questions.answers(answers_control.filter, function(err, results){
-				process_answers(answers_control, err, results);
-			}, [answers_control.question_id]);
-		}
-	}
+function push_user(user) {
+	data.users[user.id] = {
+        display_name: user.display_name,
+        role: user.role,
+        bio: bio,
+        profile_image: user.profile_image,
+        reputation: parseInt(user.reputation),
+        gold_badges: parseInt(user.gold_badges),
+        silver_badges: parseInt(user.silver_badges),
+        bronze_badges: parseInt(user.bronze_badges),
+        link: user.link
+	};
 }
 
-console.log("Coletando perguntas");
-console.log("-------------------");
-
-if (args.time) {
-	questions_filter.fromdate = args.time;
-} else if (args.day && args.month && args.year) {
-	questions_filter.fromdate = new Date(args.year + "/" + args.month + "/" + args.day).getTime() / 1000;
-}
-if (args.language) {
-	lang_folder = args.language;
-	questions_filter.tagged = args.language;
+function push_answer(answer) {
+	data.answers[answer.id] = {
+        score: parseInt(answer.score),
+        creation_date: answer.creation_date,
+        codes: answer.codes,
+		questions_question_id: answer.question_id,
+		user_id: answer.user_id
+	};
 }
 
-read_json_data();
+var user_crawler = new Crawler({
+    maxConnections : 10,
+    rateLimit: options.timeout,
+    callback : function (error, res, done) {
+        if (error){
+            console.log(error);
+        } else {
+            var $ = res.$;
+
+            display_name = $("#user-card .profile-user--name div").text();
+            role = $("#user-card .profile-user--role").text();
+            bio = $("#user-card .profile-user--bio p").text();
+            reputation = $("#avatar-card .grid__center .fs-title").text().replace(',','');
+            gold_badges = silver_badges = bronze_badges = 0;
+            $("#avatar-card .grid__fl1 .ai-center").map(function() {
+                temp = $(this).attr("title").split(" ");
+                if (temp[1] == "gold") {
+                    gold_badges = temp[0];
+                } else if (temp[1] == "silver") {
+                    silver_badges = temp[0];
+                } else if (temp[1] == "bronze") {
+                    bronze_badges = temp[0];
+                }
+            });
+
+            link = $("#avatar-card a").attr("href");
+            profile_image = $("#avatar-card img").attr("src");
+            user = {
+                id: res.options.user_id,
+                display_name: display_name,
+                role: role,
+                bio: bio,
+                profile_image: profile_image,
+                reputation: reputation,
+                gold_badges: gold_badges,
+                silver_badges: silver_badges,
+                bronze_badges: bronze_badges,
+                link: link
+            }
+            push_user(user);
+            save_data();
+        }
+        done();
+    }
+});
+
+var question_crawler = new Crawler({
+    maxConnections : 10,
+    rateLimit: options.timeout,
+    callback : function (error, res, done) {
+        if (error){
+            console.log(error);
+        } else {
+            var $ = res.$;
+
+            user = $("#question .user-info").map(function() {
+                if ($(this).find(".user-details").attr("itemprop") == "author") {
+                    return $(this);
+                }
+            }).toArray()[0];
+            if (user !== undefined) {
+                user_link = URL+user.find(".user-details a").attr("href");
+                user_id = user_link.split("/")[4];
+                user_crawler.queue({
+                    uri:user_link,
+                    user_id:user_id
+                });
+
+                question_id = $("#question").attr("data-questionid");
+                question_title = $("#question-header h1 a").text();
+                question_body = $("#question .post-text").text();
+                question_score = $("#question .js-vote-count").text();
+                question_info = $("#qinfo tr td b").map(function() {
+                    return $(this);
+                }).toArray();
+                question_creation = user.find(".user-action-time span").attr("title");
+                question_views = question_info[1].text().split(" ")[0].replace(',', '');
+                question_link = URL+$("#question-header h1 a").attr("href");
+                question_tags = $("#question .post-taglist a").map(function() {
+                    return $(this).text();
+                }).toArray();
+                question = {
+                    id: question_id,
+                    title: question_title,
+                    body: question_body,
+                    views: question_views,
+                    score: question_score,
+                    link: question_link,
+                    creation_date: question_creation,
+                    tags: question_tags,
+                    user_id: user_id
+                }
+                push_question(question);
+                save_data();
+
+                pages_count = $("#answers .pager-answers a").map(function() {
+                    return $(this);
+                }).toArray().length/2 || 1;
+                for (let index = 1; index <= pages_count; index++) {
+                    answer_crawler.queue({
+                        uri: question_link+'?page='+index+'&tab=oldest#tab-top',
+                        question_id: question_id
+                    });
+                }
+            }
+        }
+        done();
+    }
+});
+
+var answer_crawler = new Crawler({
+    maxConnections : 10,
+    rateLimit: options.timeout,
+    callback : function (error, res, done) {
+        if (error){
+            console.log(error);
+        } else {
+            var $ = res.$;
+
+            $("#answers .answer").each(function() {
+                user = $(this).find(".user-info").map(function() {
+                    if ($(this).find(".user-details").attr("itemprop") == "author") {
+                        return $(this);
+                    }
+                }).toArray()[0];
+                if (user !== undefined) {
+                    user_link = URL+user.find(".user-details a").attr("href");
+                    user_id = user_link.split("/")[4];
+                    user_crawler.queue({
+                        uri:user_link,
+                        user_id:user_id
+                    });
+
+                    answer_id = $(this).attr("data-answerid");
+                    answer_score = $(this).find(".js-vote-count").attr("data-value");
+                    answer_codes = $(this).find(".post-text code").map(function() {
+                        return $(this).text();
+                    }).toArray()
+                    answer_creation = user.find(".user-action-time span").attr("title");
+                    question_id = res.options.question_id;
+                    answer = {
+                        id: answer_id,
+                        score: answer_score,
+                        creation_date: answer_creation,
+                        codes: answer_codes,
+                        question_id: question_id,
+                        user_id: user_id
+                    }
+                    push_answer(answer);
+                    save_data();
+                }
+            });
+
+        }
+        done();
+    }
+});
+
+var search_crawler = new Crawler({
+    maxConnections : 10,
+    rateLimit: options.timeout,
+    callback : function (error, res, done) {
+        if (error){
+            console.log(error);
+        } else {
+            var $ = res.$;
+            $("#questions .question-hyperlink").each(function() {
+                link = URL+$(this).attr("href");
+                question_crawler.queue(link);
+            });
+        }
+        done();
+    }
+});
+
 make_folders();
-var parser = new DomParser();
-var context = new Stackexchange(options_stackoverflow);
-context.search.advanced(questions_filter, process_questions);
+read_json_data();
+
+if (args.url){
+    question_crawler.queue(args.url);
+} else {
+    for (let index = options.init_page; index <= options.end_page; index++) {
+        search_crawler.queue(URL+'/questions/tagged/'+options.lang+'?sort='+options.sort+'&page='+index+'&pagesize='+options.per_page);
+    }    
+}
