@@ -1,6 +1,7 @@
 var args = require('yargs').argv;
 var Crawler = require("crawler");
 var fs = require('fs');
+var csvWriter = require('csv-write-stream')
 
 const URL = "https://stackoverflow.com";
 
@@ -13,11 +14,7 @@ var options = {
     "per_page": args.size || 50
 }
 
-var data = {
-	users: {},
-	questions: {},
-	answers: {}
-};
+const writer = {}
 
 function make_folders() {
 	if (!fs.existsSync("files/")) {
@@ -34,52 +31,62 @@ function make_folders() {
 			}
 		});
 	}
+	make_files();
 }
 
-function read_json_data() {
-	try {
-		data.users = JSON.parse(fs.readFileSync("files/"+options.lang+"/users.json"));
-	} catch (err) {}
-	try {
-		data.questions = JSON.parse(fs.readFileSync("files/"+options.lang+"/questions.json"));
-	} catch (err) {}
-	try {
-		data.answers = JSON.parse(fs.readFileSync("files/"+options.lang+"/answers.json"));
-	} catch (err) {}
-}
+function make_files() {
+	if (!fs.existsSync("files/"+options.lang+"/users.csv")) {
+        users_writer = csvWriter({ headers: ["id", "display_name", "reputation", "gold_badges", "silver_badges", "bronze_badges", "link"]});
+	} else {
+		users_writer = csvWriter({sendHeaders: false});
+	}
 
-function save_data() {
-	fs.writeFile('files/'+options.lang+'/users.json', JSON.stringify(data.users, null, 4), (err) => {
-		if (err) throw err;
-	})
-	fs.writeFile('files/'+options.lang+'/questions.json', JSON.stringify(data.questions, null, 4), (err) => {
-		if (err) throw err;
-	})
-	fs.writeFile('files/'+options.lang+'/answers.json', JSON.stringify(data.answers, null, 4), (err) => {
-		if (err) throw err;
-    })
-    
-    console.log('Files have been updated!' +
-        ' USERS: '+Object.keys(data.users).length +
-        ' QUESTIONS: '+Object.keys(data.questions).length +
-        ' ANSWERS: '+Object.keys(data.answers).length
-    );
+	if (!fs.existsSync("files/"+options.lang+"/questions.csv")) {
+        questions_writer = csvWriter({ headers: ["id", "title", "body", "views", "score", "link", "creation_date", "tags", "user_id"]});
+	} else {
+		questions_writer = csvWriter({sendHeaders: false});
+	}
+
+	if (!fs.existsSync("files/"+options.lang+"/answers.csv")) {
+        answers_writer = csvWriter({ headers: ["id", "score", "creation_date", "question_id", "user_id"]});
+	} else {
+		answers_writer = csvWriter({sendHeaders: false});
+	}
+
+	if (!fs.existsSync("files/"+options.lang+"/codes.csv")) {
+		codes_writer = csvWriter({ headers: ["answer_id", "code"]});
+	} else {
+		codes_writer = csvWriter({sendHeaders: false});
+	}
+
+	writer.users = users_writer;
+	writer.questions = questions_writer;
+	writer.answers = answers_writer;
+	writer.codes = codes_writer;
+
+	writer.users.pipe(fs.createWriteStream("files/"+options.lang+"/users.csv", {flags: 'a'}));
+	writer.questions.pipe(fs.createWriteStream("files/"+options.lang+"/questions.csv", {flags: 'a'}));
+	writer.answers.pipe(fs.createWriteStream("files/"+options.lang+"/answers.csv", {flags: 'a'}));
+	writer.codes.pipe(fs.createWriteStream("files/"+options.lang+"/codes.csv", {flags: 'a'}));
 }
 
 function push_user(user) {
-	data.users[user.id] = {
+	writer.users.write({
+		id: user.id,
         display_name: user.display_name,
         reputation: parseInt(user.reputation),
         gold_badges: parseInt(user.gold_badges),
         silver_badges: parseInt(user.silver_badges),
         bronze_badges: parseInt(user.bronze_badges),
         link: user.link
-	};
+    });
+    console.log('Users file has been updated!');
 }
 
 function push_question(question) {
-	data.questions[question.id] = {
-		title: question.title,
+	writer.questions.write({
+		id: question.id,
+        title: question.title,
         body: question.body,
         views: parseInt(question.views),
         score: parseInt(question.score),
@@ -87,17 +94,28 @@ function push_question(question) {
         creation_date: question.creation_date,
         tags: question.tags,
         user_id: question.user_id
-	};
+    });
+    console.log('Questions file has been updated!');
 }
 
 function push_answer(answer) {
-	data.answers[answer.id] = {
+	writer.answers.write({
+		id: answer.id,
         score: parseInt(answer.score),
         creation_date: answer.creation_date,
         codes: answer.codes,
-		questions_question_id: answer.question_id,
+		question_id: answer.question_id,
 		user_id: answer.user_id
-	};
+    });
+    console.log('Answers file has been updated!');
+}
+
+function push_code(answer_id, code) {
+	writer.codes.write({
+		answer_id: answer_id,
+		code: code
+    });
+    console.log('Codes file has been updated!');
 }
 
 function get_user($, user_info) {
@@ -169,11 +187,13 @@ function get_answer($, answer, user, user_id, question_id) {
         return $(this).text();
     }).toArray();
     answer_creation = user.find(".user-action-time span").attr("title");
+    for (let index = 0; index < answer_codes.length; index++) {
+        push_code(answer_id, answer_codes[index])
+    }
     return {
         id: answer_id,
         score: answer_score,
         creation_date: answer_creation,
-        codes: answer_codes,
         question_id: question_id,
         user_id: user_id
     }
@@ -211,7 +231,6 @@ var question_crawler = new Crawler({
                 }
             }
         }
-        save_data();
         done();
     }
 });
@@ -240,7 +259,6 @@ var answer_crawler = new Crawler({
                 }
             });
         }
-        save_data();
         done();
     }
 });
@@ -263,7 +281,6 @@ var search_crawler = new Crawler({
 });
 
 make_folders();
-read_json_data();
 
 if (args.url){
     question_crawler.queue(args.url);
